@@ -3,94 +3,14 @@ text
 FarmProfit
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FarmProfitSA - Herd Management</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f4f6f9; margin: 0; padding: 15px; color: #333; }
-        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        h1 { font-size: 22px; color: #1e3a8a; margin-top: 0; display: flex; align-items: center; gap: 8px; }
-        h2 { font-size: 16px; margin: 0 0 15px 0; color: #475569; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #4a5568; }
-        input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        .btn { background-color: #16a34a; color: white; border: none; width: 100%; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .btn:hover { background-color: #15803d; }
-        .result-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 15px; border-bottom: 1px solid #f1f5f9; }
-        .total-row { font-weight: bold; font-size: 18px; color: #16a34a; border-top: 2px solid #cbd5e1; padding-top: 10px; margin-top: 10px; }
-        .loss { color: #dc2626; }
-    </style>
+<title>FarmProfit SA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
-
-    <div class="card">
-        <h1>🐄 FarmProfitSA</h1>
-        <p style="margin: 0; color: #64748b; font-size: 14px;">Cattle Profit & Herd Management</p>
-    </div>
-
-    <!-- INPUT FORM -->
-    <div class="card">
-        <h2>Enter Herd Details</h2>
-        <div class="form-group">
-            <label for="herdSize">Total Cattle in Herd</label>
-            <input type="number" id="herdSize" placeholder="e.g. 50" value="0">
-        </div>
-        <div class="form-group">
-            <label for="expenses">Total Operating Costs (Rands)</label>
-            <input type="number" id="expenses" placeholder="Feed, vet, labor costs" value="0">
-        </div>
-        <div class="form-group">
-            <label for="revenue">Total Cattle Sales Revenue (Rands)</label>
-            <input type="number" id="revenue" placeholder="Income from sold cattle" value="0">
-        </div>
-        <button class="btn" onclick="calculateProfit()">Calculate Performance</button>
-    </div>
-
-    <!-- CALCULATED RESULTS -->
-    <div class="card">
-        <h2>Financial Overview</h2>
-        <div class="result-row">
-            <span>Total Herd Size:</span>
-            <span id="resHerd" style="font-weight: 600;">0 head</span>
-        </div>
-        <div class="result-row">
-            <span>Total Expenses:</span>
-            <span id="resExpenses">R 0.00</span>
-        </div>
-        <div class="result-row">
-            <span>Total Revenue:</span>
-            <span id="resRevenue">R 0.00</span>
-        </div>
-        <div class="result-row total-row">
-            <span>Net Profit:</span>
-            <span id="resProfit">R 0.00</span>
-        </div>
-    </div>
-
-    <script>
-        function calculateProfit() {
-            const herd = parseFloat(document.getElementById('herdSize').value) || 0;
-            const exp = parseFloat(document.getElementById('expenses').value) || 0;
-            const rev = parseFloat(document.getElementById('revenue').value) || 0;
-            
-            const profit = rev - exp;
-
-            document.getElementById('resHerd').innerText = herd + " head";
-            document.getElementById('resExpenses').innerText = "R " + exp.toLocaleString('en-ZA', {minimumFractionDigits: 2});
-            document.getElementById('resRevenue').innerText = "R " + rev.toLocaleString('en-ZA', {minimumFractionDigits: 2});
-            
-            const profitEl = document.getElementById('resProfit');
-            profitEl.innerText = "R " + profit.toLocaleString('en-ZA', {minimumFractionDigits: 2});
-            
-            if (profit >= 0) {
-                profitEl.className = 'resProfit';
-                profitEl.style.color = '#16a34a';
-            } else {
-                profitEl.style.color = '#dc2626';
-            }
-        }
-    </script>
-
+<h1>🐄 FarmProfit SA</h1>
+<h2>Cattle Profit Calculator</h2>
+<p>Our app is working!</p>
 </body>
 </html>
