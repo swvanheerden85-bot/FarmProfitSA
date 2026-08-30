@@ -5,12 +5,174 @@ FarmProfit
 <!DOCTYPE html>
 <html>
 <head>
-<title>FarmProfit SA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarmProfit SA</title>
+<style>
+body{font-family:Arial;margin:0;background:#f3f7f4;color:#173024}
+header{background:#0b6b3a;color:white;padding:20px}
+main{max-width:500px;margin:auto;padding:15px}
+.card{background:white;border:1px solid #ddd;border-radius:14px;padding:15px;margin:10px 0}
+button{width:100%;padding:13px;margin:5px 0;background:#0b6b3a;color:white;border:0;border-radius:9px;font-weight:bold}
+input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;border:1px solid #ccc;border-radius:9px}
+.row{display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #eee}
+.big{font-size:30px;color:#0b6b3a;font-weight:bold}
+.hide{display:none}
+</style>
 </head>
 <body>
+
+<header>
 <h1>🐄 FarmProfit SA</h1>
-<h2>Cattle Profit Calculator</h2>
-<p>Our app is working!</p>
+<p>Cattle • Feed • Growth • Profit</p>
+</header>
+
+<main>
+<div id="home">
+<div class="card">
+<h2>📊 Farm Dashboard</h2>
+<div class="row"><span>Cattle</span><b id="count">0</b></div>
+<div class="row"><span>Total invested</span><b id="invested">R0</b></div>
+<div class="row"><span>Current value</span><b id="value">R0</b></div>
+<div class="row"><span>Estimated profit</span><b id="profit">R0</b></div>
+</div>
+<button onclick="show('add')">🐄 ADD CATTLE</button>
+<button onclick="show('auction')">🔨 AUCTION CALCULATOR</button>
+<button onclick="show('feed')">🌾 FEED CALCULATOR</button>
+<h2>🐄 My Cattle</h2>
+<div id="cattle"></div>
+</div>
+
+<div id="add" class="hide">
+<div class="card">
+<h2>🐄 Add Cattle</h2>
+<input id="tag" placeholder="Ear tag / ID">
+<input id="pw" type="number" placeholder="Purchase weight kg">
+<input id="pp" type="number" placeholder="Purchase price R">
+<input id="cw" type="number" placeholder="Current weight kg">
+<input id="fc" type="number" placeholder="Feed costs R" value="0">
+<input id="mc" type="number" placeholder="Medicine / Vet R" value="0">
+<input id="oc" type="number" placeholder="Other costs R" value="0">
+<input id="kg" type="number" placeholder="Current value R/kg" value="50">
+<button onclick="addCattle()">SAVE ANIMAL</button>
+<button onclick="show('home')">BACK</button>
+</div>
+</div>
+
+<div id="auction" class="hide">
+<div class="card">
+<h2>🔨 Auction Calculator</h2>
+<input id="saleweight" type="number" placeholder="Expected sale weight kg">
+<input id="salePrice" type="number" placeholder="Expected sale price R/kg">
+<input id="auctionCosts" type="number" placeholder="Feed + other costs R">
+<input id="desiredProfit" type="number" placeholder="Desired profit R">
+<button onclick="auction()">CALCULATE MAXIMUM BID</button>
+<div id="auctionResult"></div>
+<button onclick="show('home')">BACK</button>
+</div>
+</div>
+
+<div id="feed" class="hide">
+<div class="card">
+<h2>🌾 Feed Calculator</h2>
+<input id="feedTon" type="number" placeholder="Feed price per ton R">
+<input id="feedKg" type="number" placeholder="Feed kg per animal/day">
+<input id="animalCount" type="number" placeholder="Number of cattle">
+<input id="feedDays" type="number" placeholder="Number of days">
+<button onclick="feedCalc()">CALCULATE FEED COST</button>
+<div id="feedResult"></div>
+<button onclick="show('home')">BACK</button>
+</div>
+</div>
+</main>
+
+<script>
+let cattleData=JSON.parse(localStorage.getItem("FarmProfitSA"))||[];
+
+function money(x){
+return "R"+Math.round(x||0).toLocaleString("en-ZA");
+}
+
+function show(page){
+["home","add","auction","feed"].forEach(function(x){
+document.getElementById(x).classList.add("hide");
+});
+document.getElementById(page).classList.remove("hide");
+if(page=="home")render();
+}
+
+function save(){
+localStorage.setItem("FarmProfitSA",JSON.stringify(cattleData));
+render();
+}
+
+function addCattle(){
+let animal={
+tag:document.getElementById("tag").value||"Animal",
+pw:+document.getElementById("pw").value,
+pp:+document.getElementById("pp").value,
+cw:+document.getElementById("cw").value,
+fc:+document.getElementById("fc").value,
+mc:+document.getElementById("mc").value,
+oc:+document.getElementById("oc").value,
+kg:+document.getElementById("kg").value
+};
+cattleData.push(animal);
+save();
+show("home");
+}
+
+function render(){
+let invested=0;
+let value=0;
+let list="";
+
+cattleData.forEach(function(a){
+let inv=a.pp+a.fc+a.mc+a.oc;
+let val=a.cw*a.kg;
+let profit=val-inv;
+
+invested+=inv;
+value+=val;
+
+list+=
+'<div class="card">'+
+'<h3>🐄 '+a.tag+'</h3>'+
+'<div class="row"><span>Weight</span><b>'+a.cw+' kg</b></div>'+
+'<div class="row"><span>Investment</span><b>'+money(inv)+'</b></div>'+
+'<div class="row"><span>Value</span><b>'+money(val)+'</b></div>'+
+'<div class="row"><span>Profit/Loss</span><b>'+money(profit)+'</b></div>'+
+'</div>';
+});
+
+document.getElementById("count").innerText=cattleData.length;
+document.getElementById("invested").innerText=money(invested);
+document.getElementById("value").innerText=money(value);
+document.getElementById("profit").innerText=money(value-invested);
+document.getElementById("cattle").innerHTML=list;
+}
+
+function auction(){
+let sw=+document.getElementById("saleweight").value;
+let sp=+document.getElementById("salePrice").value;
+let ac=+document.getElementById("auctionCosts").value;
+let dp=+document.getElementById("desiredProfit").value;
+let maxBid=(sw*sp)-ac-dp;
+document.getElementById("auctionResult").innerHTML=
+'<div class="card" style="text-align:center;"><h3>Maximum Bid Recommended:</h3><p class="big">'+money(maxBid)+'</p></div>';
+}
+
+function feedCalc(){
+let fTon=+document.getElementById("feedTon").value;
+let fKg=+document.getElementById("feedKg").value;
+let count=+document.getElementById("animalCount").value;
+let days=+document.getElementById("feedDays").value;
+let totalKg=fKg*count*days;
+let totalCost=(totalKg/1000)*fTon;
+document.getElementById("feedResult").innerHTML=
+'<div class="card">📁 Total Feed: <b>'+totalKg+' kg</b><br>💰 Total Feed Cost: <b>'+money(totalCost)+'</b></div>';
+}
+
+show("home");
+</script>
 </body>
 </html>
