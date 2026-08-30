@@ -3,221 +3,375 @@ text
 FarmProfit
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#176b3a">
 <title>FarmProfit SA</title>
+
 <style>
-body{font-family:Arial;margin:0;background:#f3f7f4;color:#173024}
-header{background:#0b6b3a;color:white;padding:20px}
-main{max-width:500px;margin:auto;padding:15px}
-.card{background:white;border:1px solid #ddd;border-radius:14px;padding:15px;margin:10px 0}
-button{width:100%;padding:13px;margin:5px 0;background:#0b6b3a;color:white;border:0;border-radius:9px;font-weight:bold}
-.btn-secondary{background:#475569}
-input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;border:1px solid #ccc;border-radius:9px}
-.row{display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #eee}
-.big{font-size:30px;color:#0b6b3a;font-weight:bold}
-.hide{display:none}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f3f6f3;
+  color:#17231b;
+}
+header{
+  background:#176b3a;
+  color:white;
+  padding:18px 14px;
+  text-align:center;
+  position:sticky;
+  top:0;
+  z-index:10;
+}
+header h1{margin:0;font-size:25px}
+header p{margin:5px 0 0 0;font-size:13px;opacity:.9}
+
+nav{
+  display:flex;
+  overflow-x:auto;
+  background:white;
+  border-bottom:1px solid #ddd;
+}
+nav button{
+  border:0;
+  background:white;
+  padding:13px 15px;
+  white-space:nowrap;
+  font-weight:bold;
+  color:#31513d;
+}
+nav button.active{
+  color:#176b3a;
+  border-bottom:3px solid #176b3a;
+}
+
+main{max-width:900px;margin:auto;padding:14px}
+.page{display:none}
+.page.active{display:block}
+
+.card{
+  background:white;
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,.07);
+}
+.card h2, .card h3{margin-top:0}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+@media(min-width:700px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+}
+
+.stat{
+  background:#eef7f0;
+  border-radius:12px;
+  padding:13px;
+}
+.stat small{display:block;color:#55705d}
+.stat strong{font-size:20px;display:block;margin-top:4px}
+
+label{
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin-top:10px;
+}
+input,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccd5ce;
+  border-radius:9px;
+  font-size:16px;
+  margin-top:5px;
+  background:white;
+}
+
+button.primary{
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:10px;
+  background:#176b3a;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:14px;
+}
+button.secondary{
+  width:100%;
+  padding:11px;
+  border:1px solid #176b3a;
+  border-radius:10px;
+  background:white;
+  color:#176b3a;
+  font-weight:bold;
+  margin-top:8px;
+}
+button.danger{
+  background:#b42318;
+  color:white;
+  border:0;
+  border-radius:8px;
+  padding:8px 10px;
+}
+
+.result{
+  background:#f0f7f2;
+  border-left:5px solid #176b3a;
+  padding:14px;
+  border-radius:8px;
+  margin-top:14px;
+}
+.profit{font-size:27px;font-weight:bold;color:#176b3a}
+.loss{color:#b42318}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13px;
+}
+th,td{
+  padding:9px 5px;
+  border-bottom:1px solid #ddd;
+  text-align:left;
+}
+.actions button{margin:2px}
+
+.empty{
+  text-align:center;
+  color:#6d796f;
+  padding:25px 10px;
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:bold;
+}
+.good{background:#dff3e4;color:#176b3a}
+.warn{background:#fff1cc;color:#7a5600}
+.bad{background:#fde0dd;color:#9d2017}
+
+hr{border:0;border-top:1px solid #ddd;margin:16px 0}
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>🐄 FarmProfit SA</h1>
-<p>Cattle • Feed • Growth • Profit</p>
+  <h1>🐄 FarmProfit SA</h1>
+  <p>Smart farming profit calculator</p>
 </header>
 
+<nav>
+  <button class="active" onclick="showPage('dashboard', this)">📊 Dashboard</button>
+  <button onclick="showPage('cattle', this)">🐄 Cattle</button>
+  <button onclick="showPage('buy', this)">💰 Buy Calculator</button>
+  <button onclick="showPage('feed', this)">🌾 Feed</button>
+  <button onclick="showPage('auction', this)">🔨 Auction</button>
+  <button onclick="showPage('expenses', this)">📝 Expenses</button>
+  <button onclick="showPage('backup', this)">⚙️ Backup</button>
+</nav>
+
 <main>
-<div id="home">
-<div class="card">
-<h2>📊 Farm Dashboard</h2>
-<div class="row"><span>Cattle</span><b id="count">0</b></div>
-<div class="row"><span>Total invested</span><b id="invested">R0</b></div>
-<div class="row"><span>Current value</span><b id="value">R0</b></div>
-<div class="row"><span>Estimated profit</span><b id="profit">R0</b></div>
-</div>
-<button onclick="show('add')">🐄 ADD CATTLE</button>
-<button onclick="show('auction')">🔨 AUCTION CALCULATOR</button>
-<button onclick="show('feed')">🌾 FEED CALCULATOR</button>
-<button class="btn-secondary" onclick="show('settings')">⚙️ APP SETTINGS & BACKUP</button>
-<h2>🐄 My Cattle</h2>
-<div id="cattle"></div>
-</div>
 
-<div id="add" class="hide">
-<div class="card">
-<h2>🐄 Add Cattle</h2>
-<input id="tag" placeholder="Ear tag / ID">
-<input id="pw" type="number" placeholder="Purchase weight kg">
-<input id="pp" type="number" placeholder="Purchase price R">
-<input id="cw" type="number" placeholder="Current weight kg">
-<input id="fc" type="number" placeholder="Feed costs R" value="0">
-<input id="mc" type="number" placeholder="Medicine / Vet R" value="0">
-<input id="oc" type="number" placeholder="Other costs R" value="0">
-<input id="kg" type="number" placeholder="Current value R/kg" value="50">
-<button onclick="addCattle()">SAVE ANIMAL</button>
-<button class="btn-secondary" onclick="show('home')">BACK</button>
-</div>
-</div>
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="page active">
+    <div class="card">
+      <h2>📊 Farm Dashboard</h2>
+      <div class="grid">
+        <div class="stat">
+          <small>Total cattle</small>
+          <strong id="dCount">0</strong>
+        </div>
+        <div class="stat">
+          <small>Invested</small>
+          <strong id="dInvested">R0</strong>
+        </div>
+        <div class="stat">
+          <small>Current value</small>
+          <strong id="dCurrent">R0</strong>
+        </div>
+        <div class="stat">
+          <small>Expected sales</small>
+          <strong id="dSales">R0</strong>
+        </div>
+      </div>
+      
+      <div class="result">
+        <small>Estimated farm profit</small>
+        <div id="dProfit" class="profit">R0</div>
+      </div>
+    </div>
 
-<div id="auction" class="hide">
-<div class="card">
-<h2>🔨 Auction Calculator</h2>
-<input id="saleweight" type="number" placeholder="Expected sale weight kg">
-<input id="salePrice" type="number" placeholder="Expected sale price R/kg">
-<input id="auctionCosts" type="number" placeholder="Feed + other costs R">
-<input id="desiredProfit" type="number" placeholder="Desired profit R">
-<button onclick="auction()">CALCULATE MAXIMUM BID</button>
-<div id="auctionResult"></div>
-<button class="btn-secondary" onclick="show('home')">BACK</button>
-</div>
-</div>
+    <div class="card">
+      <h3>📈 Farm performance</h3>
+      <div id="performance"></div>
+    </div>
 
-<div id="feed" class="hide">
-<div class="card">
-<h2>🌾 Feed Calculator</h2>
-<input id="feedTon" type="number" placeholder="Feed price per ton R">
-<input id="feedKg" type="number" placeholder="Feed kg per animal/day">
-<input id="animalCount" type="number" placeholder="Number of cattle">
-<input id="feedDays" type="number" placeholder="Number of days">
-<button onclick="feedCalc()">CALCULATE FEED COST</button>
-<div id="feedResult"></div>
-<button class="btn-secondary" onclick="show('home')">BACK</button>
-</div>
-</div>
+    <div class="card">
+      <h3>🐄 Cattle overview</h3>
+      <div id="dashboardCattle"></div>
+    </div>
+  </section>
 
-<div id="settings" class="hide">
-<div class="card">
-<h2>⚙️ Data Backup</h2>
-<p>Save your livestock data to your phone memory so it never gets lost.</p>
-<button onclick="exportData()">💾 BACKUP DATA (DOWNLOAD FILE)</button>
-<p style="margin-top:20px;">Restore data from a saved backup file:</p>
-<input type="file" id="importFile" accept=".json" onchange="importData(event)">
-<button class="btn-secondary" style="margin-top:20px;" onclick="show('home')">BACK</button>
-</div>
-</div>
+  <!-- CATTLE LIST & ENTRY -->
+  <section id="cattle" class="page">
+    <div class="card">
+      <h2>🐄 Add / Edit Cattle</h2>
+      <input type="hidden" id="editId">
+      
+      <label>Animal / Lot Number</label>
+      <input id="animalNo" placeholder="Example: 001">
+      
+      <label>Breed</label>
+      <input id="breed" placeholder="Example: Beefmaster">
+      
+      <label>Sex</label>
+      <select id="sex">
+        <option>Bull</option>
+        <option>Heifer</option>
+        <option>Cow</option>
+        <option>Steer</option>
+      </select>
+      
+      <label>Date Bought</label>
+      <input type="date" id="buyDate">
+      
+      <label>Purchase Weight (kg)</label>
+      <input type="number" id="purchaseWeight" placeholder="240">
+      
+      <label>Current Weight (kg)</label>
+      <input type="number" id="currentWeight" placeholder="350">
+      
+      <label>Target Sale Weight (kg)</label>
+      <input type="number" id="targetWeight" placeholder="450">
+      
+      <label>Purchase Price (R)</label>
+      <input type="number" id="purchasePrice" placeholder="8000">
+      
+      <label>Expected Sale Price (R/kg)</label>
+      <input type="number" id="salePriceKg" placeholder="50">
+      
+      <label>Feed Cost to Date (R)</label>
+      <input type="number" id="feedCost" placeholder="0" value="0">
+      
+      <label>Other Costs (R)</label>
+      <input type="number" id="otherCost" placeholder="0" value="0">
+      
+      <button class="primary" onclick="saveCattle()">💾 Save Animal</button>
+      <button class="secondary" onclick="clearCattleForm()">Clear</button>
+    </div>
+
+    <div class="card">
+      <h2>🐄 My Cattle</h2>
+      <div id="cattleList"></div>
+    </div>
+  </section>
+
+  <!-- BUY CALCULATOR -->
+  <section id="buy" class="page">
+    <div class="card">
+      <h2>💰 Should I Buy This Animal?</h2>
+      <label>Purchase Weight (kg)</label>
+      <input type="number" id="bWeight" placeholder="250">
+      <label>Asking Price (R)</label>
+      <input type="number" id="bPrice" placeholder="8500">
+      <label>Target Finish Weight (kg)</label>
+      <input type="number" id="bTargetWeight" placeholder="450">
+      <label>Estimated Market Price at Sale (R/kg)</label>
+      <input type="number" id="bMarketPrice" placeholder="48">
+      <label>Estimated Feeding & Vet Cost (R)</label>
+      <input type="number" id="bEstCost" placeholder="3000">
+      <button class="primary" onclick="calcBuy()">Calculate Purchase Margin</button>
+      <div id="buyResult"></div>
+    </div>
+  </section>
+
+  <!-- FEED CALCULATOR -->
+  <section id="feed" class="page">
+    <div class="card">
+      <h2>🌾 Feed Calculation Helper</h2>
+      <label>Number of Animals</label>
+      <input type="number" id="fAnimals" placeholder="10">
+      <label>Feed Consumed per Animal per Day (kg)</label>
+      <input type="number" id="fKgDay" placeholder="11">
+      <label>Feeding Period Days</label>
+      <input type="number" id="fDays" placeholder="90">
+      <label>Price per Ton of Feed (R)</label>
+      <input type="number" id="fPriceTon" placeholder="5500">
+      <button class="primary" onclick="calcFeed()">Calculate Total Feed Requirement</button>
+      <div id="feedResult"></div>
+    </div>
+  </section>
+
+  <!-- AUCTION PRICE EVALUATOR -->
+  <section id="auction" class="page">
+    <div class="card">
+      <h2>🔨 Auction Price Target</h2>
+      <label>Current Live Weight (kg)</label>
+      <input type="number" id="aWeight" placeholder="300">
+      <label>Estimated Dressing Percentage (%)</label>
+      <input type="number" id="aDressing" placeholder="55" value="55">
+      <label>Target Carcass Price (R/kg Choice Meat)</label>
+      <input type="number" id="aCarcassPrice" placeholder="92">
+      <button class="primary" onclick="calcAuction()">Evaluate Live Value Target</button>
+      <div id="auctionResult"></div>
+    </div>
+  </section>
+
+  <!-- EXPENSES LOG -->
+  <section id="expenses" class="page">
+    <div class="card">
+      <h2>📝 General Farm Expenses</h2>
+      <label>Expense Description</label>
+      <input id="expDesc" placeholder="Diesel / Vet Supplies / Fencing">
+      <label>Amount (R)</label>
+      <input type="number" id="expAmount" placeholder="1500">
+      <label>Category</label>
+      <select id="expCat">
+        <option>Feed & Supplements</option>
+        <option>Veterinary & Medicine</option>
+        <option>Fuel & Machinery</option>
+        <option>Infrastructure & Maintenance</option>
+        <option>Labor & Other</option>
+      </select>
+      <button class="primary" onclick="addExpense()">Add Farm Expense</button>
+    </div>
+    <div class="card">
+      <h3>Expense Ledger</h3>
+      <div id="expenseList"></div>
+    </div>
+  </section>
+
+  <!-- BACKUP MANAGEMENT -->
+  <section id="backup" class="page">
+    <div class="card">
+      <h2>⚙️ System Storage & Backup</h2>
+      <p>Save all database contents into a file download to secure your information against local mobile browser data clear cycles.</p>
+      <button class="primary" onclick="exportDatabase()">💾 Export Local Backup File</button>
+      <hr>
+      <p>Restore from an old backup database source file:</p>
+      <input type="file" id="importDatabaseFile" accept=".json" onchange="importDatabase(event)">
+    </div>
+  </section>
+
 </main>
 
 <script>
-let cattleData=JSON.parse(localStorage.getItem("FarmProfitSA"))||[];
+// INITIAL DATA HYDRATION
+let dbCattle = JSON.parse(localStorage.getItem("dbCattle")) || [];
+let dbExpenses = JSON.parse(localStorage.getItem("dbExpenses")) || [];
 
-function money(x){
-return "R"+Math.round(x||0).toLocaleString("en-ZA");
-}
-
-function show(page){
-["home","add","auction","feed","settings"].forEach(function(x){
-document.getElementById(x).classList.add("hide");
-});
-document.getElementById(page).classList.remove("hide");
-if(page=="home")render();
-}
-
-function save(){
-localStorage.setItem("FarmProfitSA",JSON.stringify(cattleData));
-render();
-}
-
-function addCattle(){
-let animal={
-tag:document.getElementById("tag").value||"Animal",
-pw:+document.getElementById("pw").value,
-pp:+document.getElementById("pp").value,
-cw:+document.getElementById("cw").value,
-fc:+document.getElementById("fc").value,
-mc:+document.getElementById("mc").value,
-oc:+document.getElementById("oc").value,
-kg:+document.getElementById("kg").value
-};
-cattleData.push(animal);
-save();
-show("home");
-}
-
-function render(){
-let invested=0;
-let value=0;
-let list="";
-
-cattleData.forEach(function(a){
-let inv=a.pp+a.fc+a.mc+a.oc;
-let val=a.cw*a.kg;
-let profit=val-inv;
-
-invested+=inv;
-value+=val;
-
-list+=
-'<div class="card">'+
-'<h3>🐄 '+a.tag+'</h3>'+
-'<div class="row"><span>Weight</span><b>'+a.cw+' kg</b></div>'+
-'<div class="row"><span>Investment</span><b>'+money(inv)+'</b></div>'+
-'<div class="row"><span>Value</span><b>'+money(val)+'</b></div>'+
-'<div class="row"><span>Profit/Loss</span><b>'+money(profit)+'</b></div>'+
-'</div>';
-});
-
-document.getElementById("count").innerText=cattleData.length;
-document.getElementById("invested").innerText=money(invested);
-document.getElementById("value").innerText=money(value);
-document.getElementById("profit").innerText=money(value-invested);
-document.getElementById("cattle").innerHTML=list;
-}
-
-function auction(){
-let sw=+document.getElementById("saleweight").value;
-let sp=+document.getElementById("salePrice").value;
-let ac=+document.getElementById("auctionCosts").value;
-let dp=+document.getElementById("desiredProfit").value;
-let maxBid=(sw*sp)-ac-dp;
-document.getElementById("auctionResult").innerHTML=
-'<div class="card" style="text-align:center;"><h3>Maximum Bid Recommended:</h3><p class="big">'+money(maxBid)+'</p></div>';
-}
-
-function feedCalc(){
-let fTon=+document.getElementById("feedTon").value;
-let fKg=+document.getElementById("feedKg").value;
-let count=+document.getElementById("animalCount").value;
-let days=+document.getElementById("feedDays").value;
-let totalKg=fKg*count*days;
-let totalCost=(totalKg/1000)*fTon;
-document.getElementById("feedResult").innerHTML=
-'<div class="card">📁 Total Feed: <b>'+totalKg+' kg</b><br>💰 Total Feed Cost: <b>'+money(totalCost)+'</b></div>';
-}
-
-function exportData() {
-const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cattleData));
-const downloadAnchor = document.createElement('a');
-downloadAnchor.setAttribute("href", dataStr);
-downloadAnchor.setAttribute("download", "farmprofit_backup.json");
-document.body.appendChild(downloadAnchor);
-downloadAnchor.click();
-downloadAnchor.remove();
-}
-
-function importData(event) {
-const file = event.target.files[0];
-if (!file) return;
-const reader = new FileReader();
-reader.onload = function(e) {
-try {
-const imported = JSON.parse(e.target.result);
-if (Array.isArray(imported)) {
-cattleData = imported;
-save();
-alert("Backup restored successfully!");
-show("home");
-} else {
-alert("Invalid backup file format.");
-}
-} catch (err) {
-alert("Error reading file.");
-}
-};
-reader.readAsText(file);
-}
-
-show("home");
-</script>
-</body>
-</html>
+function money(val) {
