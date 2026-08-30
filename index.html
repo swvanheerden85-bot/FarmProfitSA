@@ -13,6 +13,7 @@ header{background:#0b6b3a;color:white;padding:20px}
 main{max-width:500px;margin:auto;padding:15px}
 .card{background:white;border:1px solid #ddd;border-radius:14px;padding:15px;margin:10px 0}
 button{width:100%;padding:13px;margin:5px 0;background:#0b6b3a;color:white;border:0;border-radius:9px;font-weight:bold}
+.btn-secondary{background:#475569}
 input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;border:1px solid #ccc;border-radius:9px}
 .row{display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid #eee}
 .big{font-size:30px;color:#0b6b3a;font-weight:bold}
@@ -38,6 +39,7 @@ input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;border:1px soli
 <button onclick="show('add')">🐄 ADD CATTLE</button>
 <button onclick="show('auction')">🔨 AUCTION CALCULATOR</button>
 <button onclick="show('feed')">🌾 FEED CALCULATOR</button>
+<button class="btn-secondary" onclick="show('settings')">⚙️ APP SETTINGS & BACKUP</button>
 <h2>🐄 My Cattle</h2>
 <div id="cattle"></div>
 </div>
@@ -54,7 +56,7 @@ input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;border:1px soli
 <input id="oc" type="number" placeholder="Other costs R" value="0">
 <input id="kg" type="number" placeholder="Current value R/kg" value="50">
 <button onclick="addCattle()">SAVE ANIMAL</button>
-<button onclick="show('home')">BACK</button>
+<button class="btn-secondary" onclick="show('home')">BACK</button>
 </div>
 </div>
 
@@ -67,7 +69,7 @@ input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;border:1px soli
 <input id="desiredProfit" type="number" placeholder="Desired profit R">
 <button onclick="auction()">CALCULATE MAXIMUM BID</button>
 <div id="auctionResult"></div>
-<button onclick="show('home')">BACK</button>
+<button class="btn-secondary" onclick="show('home')">BACK</button>
 </div>
 </div>
 
@@ -80,7 +82,18 @@ input{width:100%;box-sizing:border-box;padding:12px;margin:5px 0;border:1px soli
 <input id="feedDays" type="number" placeholder="Number of days">
 <button onclick="feedCalc()">CALCULATE FEED COST</button>
 <div id="feedResult"></div>
-<button onclick="show('home')">BACK</button>
+<button class="btn-secondary" onclick="show('home')">BACK</button>
+</div>
+</div>
+
+<div id="settings" class="hide">
+<div class="card">
+<h2>⚙️ Data Backup</h2>
+<p>Save your livestock data to your phone memory so it never gets lost.</p>
+<button onclick="exportData()">💾 BACKUP DATA (DOWNLOAD FILE)</button>
+<p style="margin-top:20px;">Restore data from a saved backup file:</p>
+<input type="file" id="importFile" accept=".json" onchange="importData(event)">
+<button class="btn-secondary" style="margin-top:20px;" onclick="show('home')">BACK</button>
 </div>
 </div>
 </main>
@@ -93,7 +106,7 @@ return "R"+Math.round(x||0).toLocaleString("en-ZA");
 }
 
 function show(page){
-["home","add","auction","feed"].forEach(function(x){
+["home","add","auction","feed","settings"].forEach(function(x){
 document.getElementById(x).classList.add("hide");
 });
 document.getElementById(page).classList.remove("hide");
@@ -170,6 +183,38 @@ let totalKg=fKg*count*days;
 let totalCost=(totalKg/1000)*fTon;
 document.getElementById("feedResult").innerHTML=
 '<div class="card">📁 Total Feed: <b>'+totalKg+' kg</b><br>💰 Total Feed Cost: <b>'+money(totalCost)+'</b></div>';
+}
+
+function exportData() {
+const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cattleData));
+const downloadAnchor = document.createElement('a');
+downloadAnchor.setAttribute("href", dataStr);
+downloadAnchor.setAttribute("download", "farmprofit_backup.json");
+document.body.appendChild(downloadAnchor);
+downloadAnchor.click();
+downloadAnchor.remove();
+}
+
+function importData(event) {
+const file = event.target.files[0];
+if (!file) return;
+const reader = new FileReader();
+reader.onload = function(e) {
+try {
+const imported = JSON.parse(e.target.result);
+if (Array.isArray(imported)) {
+cattleData = imported;
+save();
+alert("Backup restored successfully!");
+show("home");
+} else {
+alert("Invalid backup file format.");
+}
+} catch (err) {
+alert("Error reading file.");
+}
+};
+reader.readAsText(file);
 }
 
 show("home");
