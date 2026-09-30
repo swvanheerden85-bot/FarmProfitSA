@@ -431,6 +431,54 @@ footer{
 
 </section>
 
+<!-- CALCULATOR -->
+
+<section id="calculator" class="page">
+
+<div class="card">
+
+<h2>🧮 Calculator</h2>
+
+<div class="result" style="background:#17231b;color:white;border:0;text-align:right">
+
+<div id="calcDisplay" style="font-size:32px;min-height:40px;overflow:hidden">
+0
+</div>
+
+</div>
+
+<div class="grid">
+
+<button class="secondary" onclick="calcClear()">AC</button>
+<button class="secondary" onclick="calcBack()">⌫</button>
+<button class="secondary" onclick="calcPercent()">%</button>
+<button class="primary" onclick="calcOperator('/')">÷</button>
+
+<button class="secondary" onclick="calcNumber('7')">7</button>
+<button class="secondary" onclick="calcNumber('8')">8</button>
+<button class="secondary" onclick="calcNumber('9')">9</button>
+<button class="primary" onclick="calcOperator('*')">×</button>
+
+<button class="secondary" onclick="calcNumber('4')">4</button>
+<button class="secondary" onclick="calcNumber('5')">5</button>
+<button class="secondary" onclick="calcNumber('6')">6</button>
+<button class="primary" onclick="calcOperator('-')">−</button>
+
+<button class="secondary" onclick="calcNumber('1')">1</button>
+<button class="secondary" onclick="calcNumber('2')">2</button>
+<button class="secondary" onclick="calcNumber('3')">3</button>
+<button class="primary" onclick="calcOperator('+')">+</button>
+
+<button class="secondary" onclick="calcNumber('0')">0</button>
+<button class="secondary" onclick="calcDecimal()">.</button>
+<button class="primary" onclick="calcEquals()" style="grid-column:span 2">=</button>
+
+</div>
+
+</div>
+
+</section> 
+
 
 <!-- BUY CALCULATOR -->
 
