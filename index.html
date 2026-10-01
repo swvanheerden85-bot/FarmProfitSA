@@ -449,29 +449,29 @@ footer{
 
 <div class="grid">
 
-<button class="secondary" onclick="calcClear()">AC</button>
-<button class="secondary" onclick="calcBack()">⌫</button>
-<button class="secondary" onclick="calcPercent()">%</button>
-<button class="primary" onclick="calcOperator('/')">÷</button>
+<button class="secondary" onclick="fpCalcClear()">AC</button>
+<button class="secondary" onclick="fpCalcBack()">⌫</button>
+<button class="secondary" onclick="fpCalcPercent()">%</button>
+<button class="primary" onclick="fpCalcOperator('/')">÷</button>
 
-<button class="secondary" onclick="calcNumber('7')">7</button>
-<button class="secondary" onclick="calcNumber('8')">8</button>
-<button class="secondary" onclick="calcNumber('9')">9</button>
+<button class="secondary" onclick="fpCalcNumber('7')">7</button>
+<button class="secondary" onclick="fpCalcNumber('8')">8</button>
+<button class="secondary" onclick="fpCalcNumber('9')">9</button>
 <button class="primary" onclick="calcOperator('*')">×</button>
 
-<button class="secondary" onclick="calcNumber('4')">4</button>
-<button class="secondary" onclick="calcNumber('5')">5</button>
-<button class="secondary" onclick="calcNumber('6')">6</button>
+<button class="secondary" onclick="fpCalcNumber('4')">4</button>
+<button class="secondary" onclick="fpCalcNumber('5')">5</button>
+<button class="secondary" onclick="fpCalcNumber('6')">6</button>
 <button class="primary" onclick="calcOperator('-')">−</button>
 
-<button class="secondary" onclick="calcNumber('1')">1</button>
-<button class="secondary" onclick="calcNumber('2')">2</button>
-<button class="secondary" onclick="calcNumber('3')">3</button>
+<button class="secondary" onclick="fpCalcNumber('1')">1</button>
+<button class="secondary" onclick="fpCalcNumber('2')">2</button>
+<button class="secondary" onclick="fpCalcNumber('3')">3</button>
 <button class="primary" onclick="calcOperator('+')">+</button>
 
-<button class="secondary" onclick="calcNumber('0')">0</button>
-<button class="secondary" onclick="calcDecimal()">.</button>
-<button class="primary" onclick="calcEquals()" style="grid-column:span 2">=</button>
+<button class="secondary" onclick="fpCalcNumber('0')">0</button>
+<button class="secondary" onclick="fpCalcDecimal()">.</button>
+<button class="primary" onclick="fpCalcEquals()" style="grid-column:span 2">=</button>
 
 </div>
 
@@ -1574,6 +1574,163 @@ document.addEventListener("DOMContentLoaded",function(){
  updateAll();
 
 });
+
+/* ---------- SIMPLE CALCULATOR ---------- */
+
+let fpCalcValue = "0";
+let fpCalcFirst = null;
+let fpCalcOperator = null;
+let fpCalcNewNumber = true;
+
+function fpCalcUpdate(){
+
+ const display=document.getElementById("calcDisplay");
+
+ if(display){
+  display.textContent=fpCalcValue;
+ }
+
+}
+
+function fpCalcNumber(number){
+
+ if(fpCalcNewNumber || fpCalcValue==="0"){
+
+  fpCalcValue=number;
+  fpCalcNewNumber=false;
+
+ }else{
+
+  fpCalcValue+=number;
+
+ }
+
+ fpCalcUpdate();
+
+}
+
+function fpCalcDecimal(){
+
+ if(fpCalcNewNumber){
+
+  fpCalcValue="0.";
+  fpCalcNewNumber=false;
+
+ }else if(!fpCalcValue.includes(".")){
+
+  fpCalcValue+=".";
+
+ }
+
+ fpCalcUpdate();
+
+}
+
+function fpCalcOperator(operator){
+
+ fpCalcFirst=parseFloat(fpCalcValue);
+ fpCalcOperator=operator;
+ fpCalcNewNumber=true;
+
+}
+
+function fpCalcEquals(){
+
+ if(fpCalcFirst===null || !fpCalcOperator)return;
+
+ const second=parseFloat(fpCalcValue);
+
+ let result=0;
+
+ if(fpCalcOperator==="+"){
+  result=fpCalcFirst+second;
+ }
+
+ if(fpCalcOperator==="-"){
+  result=fpCalcFirst-second;
+ }
+
+ if(fpCalcOperator==="*"){
+  result=fpCalcFirst*second;
+ }
+
+ if(fpCalcOperator==="/"){
+
+  if(second===0){
+
+   fpCalcValue="Error";
+   fpCalcFirst=null;
+   fpCalcOperator=null;
+   fpCalcNewNumber=true;
+
+   fpCalcUpdate();
+
+   return;
+  }
+
+  result=fpCalcFirst/second;
+
+ }
+
+ fpCalcValue=String(
+  Math.round(result*100000000)/100000000
+ );
+
+ fpCalcFirst=null;
+ fpCalcOperator=null;
+ fpCalcNewNumber=true;
+
+ fpCalcUpdate();
+
+}
+
+function fpCalcClear(){
+
+ fpCalcValue="0";
+ fpCalcFirst=null;
+ fpCalcOperator=null;
+ fpCalcNewNumber=true;
+
+ fpCalcUpdate();
+
+}
+
+function fpCalcBack(){
+
+ if(fpCalcNewNumber || fpCalcValue==="Error"){
+
+  fpCalcClear();
+  return;
+
+ }
+
+ if(fpCalcValue.length>1){
+
+  fpCalcValue=fpCalcValue.slice(0,-1);
+
+ }else{
+
+  fpCalcValue="0";
+
+ }
+
+ fpCalcUpdate();
+
+}
+
+function fpCalcPercent(){
+
+ const number=parseFloat(fpCalcValue);
+
+ if(!isNaN(number)){
+
+  fpCalcValue=String(number/100);
+
+  fpCalcUpdate();
+
+ }
+
+} 
 
 
 
